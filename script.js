@@ -1,5 +1,5 @@
 (function(){
-  const STORAGE_KEY = 'workbench-data-v1';
+  const STORAGE_KEY = 'InetWorkbench-data-v1';
   let state = { short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light' };
   let saveTimer = null;
 
@@ -62,16 +62,16 @@
   }
 
   async function save(){
-    setStatus('Saving…');
+    setStatus('Sparar...');
     try{
       const result = await storageSet(STORAGE_KEY, JSON.stringify(state));
       if(result){
-        setStatus('Saved', true);
+        setStatus('Sparad', true);
       }else{
-        setStatus('Save failed', true);
+        setStatus('Sparning misslyckades', true);
       }
     }catch(e){
-      setStatus('Save failed', true);
+      setStatus('Sparning misslyckades', true);
     }
   }
 
@@ -88,7 +88,7 @@
       link: '',
       contact: '',
       notes: '',
-      status: 'open',
+      status: 'öppen',
       created: new Date().toISOString()
     };
   }
@@ -96,7 +96,7 @@
   function fmtDate(iso){
     const d = new Date(iso);
     return d.toLocaleDateString(undefined, {month:'short', day:'numeric'}) + ' · ' +
-           d.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+           d.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit', hour12:false});
   }
 
   function looksLikeUrl(str){
@@ -112,14 +112,14 @@
       const empty = document.createElement('div');
       empty.className = 'empty-state';
       empty.textContent = kind === 'short'
-        ? 'Nothing on the board today. Add a ticket when something comes in.'
-        : 'No projects tracked yet. Add one to start following it here.';
+        ? 'Inga efterarbeten i stunden. Lägg till med knappen ovan.'
+        : 'Inga projekt spårade ännu. Lägg till ett för att börja följa det här.';
       container.appendChild(empty);
     }
 
     list.forEach((t) => {
       const card = document.createElement('div');
-      card.className = 'ticket' + (t.status === 'done' ? ' done' : '');
+      card.className = 'ticket' + (t.status === 'färdig' ? ' done' : '');
 
       const head = document.createElement('div');
       head.className = 'ticket-head';
@@ -132,17 +132,17 @@
       const select = document.createElement('select');
       select.className = 'status';
       select.dataset.val = t.status;
-      ['open','waiting','done'].forEach(s=>{
+      ['öppen','väntar','färdig'].forEach(s=>{
         const opt = document.createElement('option');
         opt.value = s;
-        opt.textContent = s === 'open' ? 'Open' : s === 'waiting' ? 'Waiting' : 'Done';
+        opt.textContent = s === 'öppen' ? 'Öppen' : s === 'väntar' ? 'Väntar' : 'Färdig';
         if(s === t.status) opt.selected = true;
         select.appendChild(opt);
       });
       select.addEventListener('change', ()=>{
         t.status = select.value;
         select.dataset.val = select.value;
-        card.className = 'ticket' + (t.status === 'done' ? ' done' : '');
+        card.className = 'ticket' + (t.status === 'färdig' ? ' done' : '');
         queueSave();
       });
       headRight.appendChild(select);
@@ -176,15 +176,23 @@
       linkRow.className = 'field-row';
       const linkLabel = document.createElement('span');
       linkLabel.className = 'field-label';
-      linkLabel.textContent = 'link';
+      linkLabel.textContent = 'Länk';
       const linkInput = document.createElement('input');
       linkInput.className = 'link-input';
-      linkInput.placeholder = 'Paste CRM link or ticket #';
+      linkInput.placeholder = 'C1 länk / Ärende #';
       linkInput.value = t.link;
       linkInput.addEventListener('input', ()=>{ t.link = linkInput.value; queueSave(); refreshOpenLink(); });
+      linkInput.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          contactInput.focus();
+        }
+      });
       linkRow.appendChild(linkLabel);
       linkRow.appendChild(linkInput);
 
+
+      /// Open Link button
       const openLink = document.createElement('a');
       openLink.className = 'open-link';
       openLink.target = '_blank';
@@ -201,17 +209,24 @@
       refreshOpenLink();
       linkRow.appendChild(openLink);
       body.appendChild(linkRow);
+      
 
       // contact row
       const contactRow = document.createElement('div');
       contactRow.className = 'field-row';
       const contactLabel = document.createElement('span');
       contactLabel.className = 'field-label';
-      contactLabel.textContent = 'who';
+      contactLabel.textContent = 'Vem?';
       const contactInput = document.createElement('input');
-      contactInput.placeholder = 'Contact name / phone / email';
+      contactInput.placeholder = 'Kund / Epost / Telefon';
       contactInput.value = t.contact;
       contactInput.addEventListener('input', ()=>{ t.contact = contactInput.value; queueSave(); });
+      contactInput.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          notes.focus();
+        }
+      });
       contactRow.appendChild(contactLabel);
       contactRow.appendChild(contactInput);
       body.appendChild(contactRow);
@@ -219,14 +234,14 @@
       // notes
       const notes = document.createElement('textarea');
       notes.className = 'notes';
-      notes.placeholder = 'What\'s going on, what\'s next...';
+      notes.placeholder = ' Anteckningar / Kommentarer';
       notes.value = t.notes;
       notes.addEventListener('input', ()=>{ t.notes = notes.value; queueSave(); });
       body.appendChild(notes);
 
       const footer = document.createElement('div');
       footer.className = 'ticket-footer';
-      footer.textContent = 'Added ' + fmtDate(t.created);
+      footer.textContent = 'Tillagt ' + fmtDate(t.created);
       body.appendChild(footer);
 
       card.appendChild(body);
@@ -236,9 +251,9 @@
 
   function updateCount(kind){
     const list = state[kind];
-    const openCount = list.filter(t => t.status !== 'done').length;
+    const openCount = list.filter(t => t.status !== 'färdig').length;
     document.getElementById(kind === 'short' ? 'count-short' : 'count-long').textContent =
-      openCount + ' open';
+      openCount + ' Öppna';
   }
 
   function render(){
@@ -272,7 +287,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'workbench-backup.json';
+    a.download = 'Inet Workbench-backup.json';
     a.click();
     URL.revokeObjectURL(url);
   });
@@ -292,7 +307,7 @@
         render();
         queueSave();
       }catch(err){
-        alert('Could not read that file — is it a Workbench export?');
+        alert('Could not read that file — is it an Inet Workbench export?');
       }
     };
     reader.readAsText(file);

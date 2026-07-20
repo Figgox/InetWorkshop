@@ -52,23 +52,6 @@
     --donebadge-fg:#4ADE9C; --donebadge-bg:#0F281C; --donebadge-border:#1E4432;
   }
 
-  body[data-theme="slate-copper"]{
-    --bg:#161B24;
-    --surface:#1D232E;
-    --ink:#DDE1E8;
-    --ink-soft:#7B8494;
-    --border:#2A3140;
-    --urgent:#C97A4E;
-    --urgent-soft:#33261E;
-    --project:#7C93AE;
-    --project-soft:#212B38;
-    --done-bg:#191F28;
-    --shadow:rgba(0,0,0,0.3);
-    --shadow-hover:rgba(0,0,0,0.45);
-    --waiting-fg:#D6B168; --waiting-bg:#302A1C; --waiting-border:#493C22;
-    --donebadge-fg:#8FB99A; --donebadge-bg:#1B2A20; --donebadge-border:#2E4536;
-  }
-
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -270,9 +253,9 @@
     padding:3px 8px;
     cursor:pointer;
   }
-  select.status[data-val="open"]{color:var(--ink);}
-  select.status[data-val="waiting"]{color:var(--waiting-fg); background:var(--waiting-bg); border-color:var(--waiting-border);}
-  select.status[data-val="done"]{color:var(--donebadge-fg); background:var(--donebadge-bg); border-color:var(--donebadge-border);}
+  select.status[data-val="öppen"]{color:var(--ink);}
+  select.status[data-val="väntar"]{color:var(--waiting-fg); background:var(--waiting-bg); border-color:var(--waiting-border);}
+  select.status[data-val="färdig"]{color:var(--donebadge-fg); background:var(--donebadge-bg); border-color:var(--donebadge-border);}
 
   .del-btn{
     background:none;
