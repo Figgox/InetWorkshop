@@ -8,6 +8,7 @@
 <body data-theme="light">
 
 <div class="wrap">
+  <!-- Top bar: title, autosave status, theme picker, export/import backup -->
   <header class="top">
     <div class="brand">
       <h1>Inet Workbench</h1>
@@ -26,7 +27,11 @@
     </div>
   </header>
 
+  <!-- Board: two side-by-side columns. The ticket cards themselves are empty
+       here — script.js fills #cards-short / #cards-long from saved data. -->
+       
   <div class="board">
+    <!-- "Idag" column: same-day tickets -->
     <section class="col-short">
       <div class="column-head">
         <div class="column-title">
@@ -39,11 +44,12 @@
       <div class="cards" id="cards-short"></div>
     </section>
 
+    <!-- "Projects" column: longer-running work -->
     <section class="col-long">
       <div class="column-head">
         <div class="column-title">
           <span class="dot project"></span>
-          <h2>Projects<span class="sub">Långtidsarbeten / Saker att hålla kol på.</span></h2>
+          <h2>Projekt<span class="sub">Långtidsarbeten / Saker att hålla kol på.</span></h2>
         </div>
         <span class="count-badge" id="count-long">0 Öppna</span>
       </div>
