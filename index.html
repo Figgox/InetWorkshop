@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Workbench</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Workbench</h1>
+      <p>Same-day fires and the longer game — kept next to the CRM, not inside it.</p>
+    </div>
+    <div class="top-actions">
+      <span id="save-status"></span>
+      <select id="theme-select" title="Theme">
+        <option value="light">Light</option>
+        <option value="night-shift">Night Shift</option>
+        <option value="terminal">Terminal</option>
+        <option value="slate-copper">Slate &amp; Copper</option>
+      </select>
+      <button id="export-btn">Export</button>
+      <button id="import-btn">Import</button>
+      <input type="file" id="import-file" accept="application/json" style="display:none;">
+    </div>
+  </header>
+
+  <div class="board">
+    <section class="col-short">
+      <div class="column-head">
+        <div class="column-title">
+          <span class="dot urgent"></span>
+          <h2>Today<span class="sub">solve same-day</span></h2>
+        </div>
+        <span class="count-badge" id="count-short">0 open</span>
+      </div>
+      <button class="add-btn" id="add-short">+ New ticket</button>
+      <div class="cards" id="cards-short"></div>
+    </section>
+
+    <section class="col-long">
+      <div class="column-head">
+        <div class="column-title">
+          <span class="dot project"></span>
+          <h2>Projects<span class="sub">longer term</span></h2>
+        </div>
+        <span class="count-badge" id="count-long">0 open</span>
+      </div>
+      <button class="add-btn" id="add-long">+ New project</button>
+      <div class="cards" id="cards-long"></div>
+    </section>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
