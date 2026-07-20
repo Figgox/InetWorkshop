@@ -1,8 +1,8 @@
 (function(){
-  const STORAGE_KEY = 'InetWorkbench-data-v1';
   let state = { short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light' };
   let saveTimer = null;
   let dragState = null; // set while a ticket is being dragged, see initDragDrop()
+  let userSlug = null; // set once auth.js resolves the logged-in user, see boot() below
 
   // Switches the active theme (light/night-shift/terminal) and keeps the
   // dropdown showing the right option.
@@ -22,45 +22,22 @@
     }
   }
 
-  // Reads a value from storage. Prefers window.storage if the page is
-  // embedded in a host app that provides it, otherwise falls back to the
-  // browser's own localStorage.
-  async function storageGet(key){
-    if(window.storage && typeof window.storage.get === 'function'){
-      const res = await window.storage.get(key);
-      if(res && typeof res === 'object' && 'value' in res){
-        return res.value;
-      }
-      if(typeof res === 'string'){
-        return res;
-      }
-      return null;
-    }
-    try{
-      return window.localStorage.getItem(key);
-    }catch(e){
-      return null;
-    }
+  // Reads the logged-in user's board from Firebase Realtime Database.
+  async function storageGet(){
+    const snap = await firebase.database().ref('users/' + userSlug + '/board').once('value');
+    return snap.val();
   }
 
-  // Writes a value to storage — same window.storage / localStorage fallback
-  // as storageGet.
-  async function storageSet(key, value){
-    if(window.storage && typeof window.storage.set === 'function'){
-      return await window.storage.set(key, value);
-    }
-    try{
-      window.localStorage.setItem(key, value);
-      return true;
-    }catch(e){
-      return false;
-    }
+  // Writes the logged-in user's board to Firebase Realtime Database.
+  async function storageSet(value){
+    await firebase.database().ref('users/' + userSlug + '/board').set(value);
+    return true;
   }
 
-  // Loads any saved board on startup, then draws it.
+  // Loads the logged-in user's saved board, then draws it.
   async function load(){
     try{
-      const saved = await storageGet(STORAGE_KEY);
+      const saved = await storageGet();
       if(saved){
         const parsed = JSON.parse(saved);
         state = Object.assign({ short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light' }, parsed);
@@ -76,7 +53,7 @@
   async function save(){
     setStatus('Sparar...');
     try{
-      const result = await storageSet(STORAGE_KEY, JSON.stringify(state));
+      const result = await storageSet(JSON.stringify(state));
       if(result){
         setStatus('Sparad', true);
       }else{
@@ -432,5 +409,10 @@
     e.target.value = '';
   });
 
-  load();
+  // Wait for auth.js to resolve the logged-in user before loading their
+  // board — userSlug decides which Firebase path storageGet/storageSet use.
+  window.Auth.ready().then(({ slug }) => {
+    userSlug = slug;
+    load();
+  });
 })();

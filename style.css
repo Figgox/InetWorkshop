@@ -71,6 +71,88 @@
     transition:background .2s, color .2s;
   }
 
+  .hidden{display:none !important;}
+
+  /* ---- Login screen ---- */
+  .login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .login-box{
+    width:100%;
+    max-width:340px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:0 3px 10px var(--shadow-hover);
+    padding:28px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .login-box h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    margin:0;
+    letter-spacing:-0.02em;
+  }
+  .login-sub{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+  .login-field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  .login-field input{
+    border:1px solid var(--border);
+    background:var(--bg);
+    border-radius:6px;
+    padding:9px 10px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    color:var(--ink);
+  }
+  .login-field input:focus{
+    outline:none;
+    border-color:var(--project);
+  }
+  .login-box button[type="submit"]{
+    background:var(--project);
+    border:none;
+    color:#fff;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    padding:10px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .login-box button[type="submit"]:disabled{
+    opacity:.6;
+    cursor:default;
+  }
+  .login-error{
+    margin:0;
+    color:var(--urgent);
+    font-size:12px;
+    min-height:14px;
+  }
+  .login-hint{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:11px;
+  }
+
   /* ---- Page layout ---- */
   .wrap{
     max-width:1180px;
@@ -127,6 +209,12 @@
     color:var(--ink-soft);
     min-width:70px;
     text-align:right;
+  }
+
+  .logged-in-as{
+    font-size:12px;
+    color:var(--ink-soft);
+    font-weight:500;
   }
 
   #theme-select{
