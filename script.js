@@ -359,6 +359,7 @@
   document.getElementById('theme-select').addEventListener('change', (e)=>{
     state.theme = e.target.value;
     applyTheme(state.theme);
+    localStorage.setItem('InetWorkshop-theme-pref', state.theme);
     queueSave();
   });
 
@@ -381,7 +382,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'Inet Workbench-backup.json';
+    a.download = 'Inet Workshop-backup.json';
     a.click();
     URL.revokeObjectURL(url);
   });
@@ -402,7 +403,7 @@
         render();
         queueSave();
       }catch(err){
-        alert('Could not read that file — is it an Inet Workbench export?');
+        alert('Could not read that file — is it an Inet Workshop export?');
       }
     };
     reader.readAsText(file);

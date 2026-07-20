@@ -75,12 +75,29 @@
 
   /* ---- Login screen ---- */
   .login-screen{
+    position:relative;
     min-height:100vh;
     display:flex;
     align-items:center;
     justify-content:center;
     padding:24px;
   }
+  .theme-toggle{
+    position:absolute;
+    top:20px;
+    right:20px;
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:50%;
+    font-size:16px;
+    cursor:pointer;
+  }
+  .theme-toggle:hover{border-color:var(--ink-soft);}
   .login-box{
     width:100%;
     max-width:340px;

@@ -6,7 +6,23 @@
 // (see README for the rule snippet), since there's no Firebase Auth sign-in
 // behind it.
 (function(){
-  const SESSION_KEY = 'InetWorkbench-session-v1';
+  const SESSION_KEY = 'InetWorkshop-session-v1';
+  const THEME_KEY = 'InetWorkshop-theme-pref';
+
+  // Applies a theme before login (and before any per-user theme is known)
+  // and keeps the toggle button's icon in sync with it.
+  function applyPreTheme(theme){
+    document.body.setAttribute('data-theme', theme);
+    document.getElementById('login-theme-toggle').textContent = theme === 'light' ? '🌙' : '☀️';
+  }
+
+  applyPreTheme(localStorage.getItem(THEME_KEY) || 'light');
+
+  document.getElementById('login-theme-toggle').addEventListener('click', () => {
+    const next = document.body.getAttribute('data-theme') === 'light' ? 'night-shift' : 'light';
+    localStorage.setItem(THEME_KEY, next);
+    applyPreTheme(next);
+  });
 
   function slugify(name){
     return name.trim().toLowerCase()

@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Inet Workbench</title>
+<title>Inet Workshop</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="light">
 
 <!-- Login gate: shown until a name + PIN is entered, see auth.js -->
 <div class="login-screen" id="login-screen">
+  <button type="button" id="login-theme-toggle" class="theme-toggle" title="Växla mellan ljust och mörkt tema" aria-label="Växla mellan ljust och mörkt tema">🌙</button>
   <form class="login-box" id="login-form">
-    <h1>Inet Workbench</h1>
+    <h1>Inet Workshop</h1>
     <p class="login-sub">Logga in med ditt namn och din PIN-kod.</p>
     <label class="login-field">
       Namn
@@ -30,7 +31,7 @@
   <!-- Top bar: title, autosave status, theme picker, export/import backup -->
   <header class="top">
     <div class="brand">
-      <h1>Inet Workbench</h1>
+      <h1>Inet Workshop</h1>
       <p>För efterarbeten, både att hålla koll på samt markera status.</p>
     </div>
     <div class="top-actions">
