@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Inet Workshop</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -41,11 +42,21 @@
         <option value="night-shift">Mörk</option>
         <option value="terminal">Terminal</option>
       </select>
+      <button id="trash-btn">Senast raderade</button>
       <button id="export-btn">Exportera</button>
       <button id="import-btn">Importera</button>
       <input type="file" id="import-file" accept="application/json" style="display:none;">
       <span id="logged-in-as" class="logged-in-as"></span>
       <button id="logout-btn">Logga ut</button>
+
+      <div class="trash-panel hidden" id="trash-panel">
+        <div class="trash-panel-head">
+          <h3>Senast raderade</h3>
+          <button type="button" class="trash-close" id="trash-close" title="Stäng">&times;</button>
+        </div>
+        <p class="trash-hint">Ärenden raderas permanent 24 timmar efter att de tagits bort.</p>
+        <div class="trash-list" id="trash-list"></div>
+      </div>
     </div>
   </header>
 

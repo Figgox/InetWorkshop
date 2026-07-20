@@ -22,6 +22,7 @@
     --shadow-hover:rgba(30,36,48,0.07);
     --waiting-fg:#A8791A; --waiting-bg:#FBF3DF; --waiting-border:#F0DCA0;
     --donebadge-fg:#3E7A58; --donebadge-bg:#E4F2E9; --donebadge-border:#BFE0CC;
+    --priority:#B8860B; --priority-soft:#FBF0D9;
   }
 
   /* Night Shift theme — dark, warm accents */
@@ -40,6 +41,7 @@
     --shadow-hover:rgba(0,0,0,0.4);
     --waiting-fg:#E6C25C; --waiting-bg:#332B14; --waiting-border:#4D4020;
     --donebadge-fg:#7FCB9A; --donebadge-bg:#16281E; --donebadge-border:#2A4536;
+    --priority:#E8C468; --priority-soft:#332B14;
   }
 
   /* Terminal theme — dark, green-on-black */
@@ -58,6 +60,7 @@
     --shadow-hover:rgba(0,0,0,0.5);
     --waiting-fg:#E8C23C; --waiting-bg:#2E2810; --waiting-border:#473C16;
     --donebadge-fg:#4ADE9C; --donebadge-bg:#0F281C; --donebadge-border:#1E4432;
+    --priority:#F0D264; --priority-soft:#2E2810;
   }
 
   /* ---- Base reset ---- */
@@ -201,6 +204,7 @@
   }
 
   .top-actions{
+    position:relative;
     display:flex;
     gap:8px;
     align-items:center;
@@ -231,8 +235,102 @@
   .logged-in-as{
     font-size:12px;
     color:var(--ink-soft);
-    font-weight:500;
+    font-weight:850;
   }
+
+  /* "Senast raderade" dropdown panel */
+  .trash-panel{
+    position:absolute;
+    top:calc(100% + 8px);
+    right:0;
+    width:320px;
+    max-height:360px;
+    display:flex;
+    flex-direction:column;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 6px 20px var(--shadow-hover);
+    padding:14px;
+    z-index:10;
+  }
+  .trash-panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .trash-panel-head h3{
+    margin:0;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:14px;
+    font-weight:600;
+  }
+  .trash-close{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-size:16px;
+    line-height:1;
+    cursor:pointer;
+    padding:2px 4px;
+    border-radius:4px;
+  }
+  .trash-close:hover{color:var(--urgent); background:var(--urgent-soft);}
+  .trash-hint{
+    margin:6px 0 10px;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+  .trash-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    overflow-y:auto;
+  }
+  .trash-empty{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    padding:12px 0;
+  }
+  .trash-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 10px;
+  }
+  .trash-item-info{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+  }
+  .trash-item-title{
+    font-size:12.5px;
+    color:var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .trash-item-time{
+    font-size:10.5px;
+    color:var(--ink-soft);
+  }
+  .trash-restore-btn{
+    flex-shrink:0;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:11px;
+    font-weight:500;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .trash-restore-btn:hover{border-color:var(--project); color:var(--project);}
 
   #theme-select{
     background:var(--surface);
@@ -353,6 +451,17 @@
   .ticket:hover{box-shadow:0 3px 10px var(--shadow-hover);}
   .ticket.done{opacity:.55;}
 
+  /* Prioritized tickets: tinted background + gold left strip, toggled via
+     the star button in the card header */
+  .ticket.priority{
+    background:var(--priority-soft);
+    border-color:var(--priority);
+  }
+  .ticket.priority::before{
+    background:var(--priority);
+    opacity:1;
+  }
+
   /* Drag & drop states, toggled from script.js while reordering tickets */
   .ticket.dragging{opacity:.4;}
   .ticket.drag-over-top{box-shadow:0 -3px 0 0 var(--ink), 0 1px 2px var(--shadow);}
@@ -385,6 +494,17 @@
     font-size:12px;
     color:var(--ink-soft);
     letter-spacing:.02em;
+    border:1px solid transparent;
+    background:transparent;
+    border-radius:6px;
+    padding:2px 6px;
+    min-width:0;
+    flex:1;
+  }
+  .ticket-id:focus{
+    outline:none;
+    border-color:var(--border);
+    background:var(--bg);
   }
   .col-short .ticket-id{color:var(--urgent);}
   .col-long .ticket-id{color:var(--project);}
@@ -423,6 +543,19 @@
     border-radius:4px;
   }
   .del-btn:hover{color:var(--urgent); background:var(--urgent-soft);}
+
+  .priority-btn{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    padding:2px 4px;
+    border-radius:4px;
+  }
+  .priority-btn:hover{color:var(--priority); background:var(--priority-soft);}
+  .priority-btn.active{color:var(--priority);}
 
   /* Decorative perforated line between the card header and body */
   .tear{

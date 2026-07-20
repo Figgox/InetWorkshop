@@ -1,5 +1,5 @@
 (function(){
-  let state = { short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light' };
+  let state = { short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light', deleted: [] };
   let saveTimer = null;
   let dragState = null; // set while a ticket is being dragged, see initDragDrop()
   let userSlug = null; // set once auth.js resolves the logged-in user, see boot() below
@@ -40,13 +40,77 @@
       const saved = await storageGet();
       if(saved){
         const parsed = JSON.parse(saved);
-        state = Object.assign({ short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light' }, parsed);
+        state = Object.assign({ short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light', deleted: [] }, parsed);
       }
     }catch(e){
       // no saved data yet, or storage unavailable — start fresh
     }
+    pruneDeleted();
     applyTheme(state.theme || 'light');
     render();
+    renderTrash();
+  }
+
+  // Removes anything from the trash older than 24h. Returns true if
+  // anything was actually removed, so callers know whether to save/re-render.
+  const TRASH_LIFETIME_MS = 24 * 60 * 60 * 1000;
+  function pruneDeleted(){
+    const before = state.deleted.length;
+    const cutoff = Date.now() - TRASH_LIFETIME_MS;
+    state.deleted = state.deleted.filter(d => new Date(d.deletedAt).getTime() > cutoff);
+    return state.deleted.length !== before;
+  }
+
+  // Rebuilds the "Senast raderade" list from state.deleted.
+  function renderTrash(){
+    const list = document.getElementById('trash-list');
+    list.innerHTML = '';
+
+    if(state.deleted.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'trash-empty';
+      empty.textContent = 'Inga raderade ärenden.';
+      list.appendChild(empty);
+      return;
+    }
+
+    state.deleted.forEach(entry => {
+      const row = document.createElement('div');
+      row.className = 'trash-item';
+
+      const info = document.createElement('div');
+      info.className = 'trash-item-info';
+
+      const title = document.createElement('span');
+      title.className = 'trash-item-title';
+      title.textContent = (entry.item.title || entry.item.id);
+      info.appendChild(title);
+
+      const time = document.createElement('span');
+      time.className = 'trash-item-time';
+      time.textContent = 'Raderad ' + fmtDate(entry.deletedAt);
+      info.appendChild(time);
+
+      row.appendChild(info);
+
+      const restoreBtn = document.createElement('button');
+      restoreBtn.className = 'trash-restore-btn';
+      restoreBtn.textContent = 'Återställ';
+      restoreBtn.addEventListener('click', ()=>{
+        const idx = state.deleted.indexOf(entry);
+        if(idx > -1){
+          state.deleted.splice(idx, 1);
+          state[entry.kind].unshift(entry.item);
+          renderColumn(entry.kind);
+          updateCount(entry.kind);
+          renderTrash();
+          queueSave();
+        }
+      });
+      row.appendChild(restoreBtn);
+
+      list.appendChild(row);
+    });
   }
 
   // Persists the current state to storage.
@@ -81,8 +145,15 @@
       contact: '',
       notes: '',
       status: 'öppen',
+      priority: false,
       created: new Date().toISOString()
     };
+  }
+
+  // Full class string for a ticket card — kept in one place since both the
+  // initial render and the status-change handler need to reapply it.
+  function ticketClass(t){
+    return 'ticket' + (t.priority ? ' priority' : '') + (t.status === 'färdig' ? ' done' : '');
   }
 
   // Formats a timestamp as e.g. "20 juli · 14:05" (24h clock).
@@ -124,7 +195,7 @@
 
     list.forEach((t, index) => {
       const card = document.createElement('div');
-      card.className = 'ticket' + (t.status === 'färdig' ? ' done' : '');
+      card.className = ticketClass(t);
       card.style.setProperty('--ticket-hue', hashHue(t.id));
 
       // Dragging
@@ -143,18 +214,69 @@
 
       const head = document.createElement('div');
       head.className = 'ticket-head';
-      head.innerHTML = `
-        <div class="ticket-head-left">
-          <span class="drag-handle" title="Dra för att ändra ordning">⠿</span>
-          <span class="ticket-id">${t.id}</span>
-        </div>
-      `;
 
-      head.querySelector('.drag-handle').addEventListener('mousedown', ()=>{
+      const headLeft = document.createElement('div');
+      headLeft.className = 'ticket-head-left';
+
+      const dragHandle = document.createElement('span');
+      dragHandle.className = 'drag-handle';
+      dragHandle.title = 'Dra för att ändra ordning';
+      dragHandle.textContent = '⠿';
+      dragHandle.addEventListener('mousedown', ()=>{
         card.draggable = true;
       });
+      headLeft.appendChild(dragHandle);
+
+      // Editable title — shows the auto id (T001, P001...) until the user
+      // types their own, which is then stored in t.title and takes over.
+      const idInput = document.createElement('input');
+      idInput.className = 'ticket-id';
+      idInput.value = t.title || t.id;
+      idInput.title = 'Klicka för att byta ut titeln';
+      idInput.addEventListener('input', ()=>{
+        t.title = idInput.value;
+        queueSave();
+      });
+      idInput.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          idInput.blur();
+        }
+      });
+      idInput.addEventListener('blur', ()=>{
+        if(!idInput.value.trim()){
+          t.title = '';
+          idInput.value = t.id;
+          queueSave();
+        }
+      });
+      headLeft.appendChild(idInput);
+
+      head.appendChild(headLeft);
+
       const headRight = document.createElement('div');
       headRight.className = 'ticket-head-right';
+
+      // Priority toggle — highlights the card and jumps it to the top of
+      // its column the moment it's turned on. Turning it off just leaves
+      // the card where it is.
+      const priorityBtn = document.createElement('button');
+      priorityBtn.className = 'priority-btn' + (t.priority ? ' active' : '');
+      priorityBtn.innerHTML = '★';
+      priorityBtn.title = t.priority ? 'Ta bort prioritet' : 'Markera som prioriterad';
+      priorityBtn.addEventListener('click', ()=>{
+        t.priority = !t.priority;
+        if(t.priority){
+          const idx = state[kind].indexOf(t);
+          if(idx > -1){
+            state[kind].splice(idx, 1);
+            state[kind].unshift(t);
+          }
+        }
+        renderColumn(kind);
+        queueSave();
+      });
+      headRight.appendChild(priorityBtn);
 
       // Status dropdown (öppen / väntar / färdig)
       const select = document.createElement('select');
@@ -170,7 +292,7 @@
       select.addEventListener('change', ()=>{
         t.status = select.value;
         select.dataset.val = select.value;
-        card.className = 'ticket' + (t.status === 'färdig' ? ' done' : '');
+        card.className = ticketClass(t);
         queueSave();
       });
       headRight.appendChild(select);
@@ -178,13 +300,15 @@
       const del = document.createElement('button');
       del.className = 'del-btn';
       del.innerHTML = '&times;';
-      del.title = 'Delete';
+      del.title = 'Ta bort';
       del.addEventListener('click', ()=>{
         const idx = state[kind].indexOf(t);
         if(idx > -1){
-          state[kind].splice(idx,1);
+          const [removed] = state[kind].splice(idx,1);
+          state.deleted.unshift({ item: removed, kind, deletedAt: new Date().toISOString() });
           renderColumn(kind);
           updateCount(kind);
+          renderTrash();
           queueSave();
         }
       });
@@ -363,6 +487,30 @@
     queueSave();
   });
 
+  // "Senast raderade" dropdown: toggle on click, close on outside click or ×
+  const trashPanel = document.getElementById('trash-panel');
+  document.getElementById('trash-btn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    trashPanel.classList.toggle('hidden');
+  });
+  document.getElementById('trash-close').addEventListener('click', ()=>{
+    trashPanel.classList.add('hidden');
+  });
+  document.addEventListener('click', (e)=>{
+    if(!trashPanel.classList.contains('hidden') && !trashPanel.contains(e.target)){
+      trashPanel.classList.add('hidden');
+    }
+  });
+
+  // Sweep the trash every minute so items still get purged after 24h even
+  // if the app is just left open in a tab.
+  setInterval(()=>{
+    if(pruneDeleted()){
+      renderTrash();
+      queueSave();
+    }
+  }, 60 * 1000);
+
   document.getElementById('add-short').addEventListener('click', ()=>{
     state.short.unshift(newTicket('short'));
     renderColumn('short');
@@ -398,12 +546,14 @@
     reader.onload = () => {
       try{
         const parsed = JSON.parse(reader.result);
-        state = Object.assign({ short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light' }, parsed);
+        state = Object.assign({ short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light', deleted: [] }, parsed);
+        pruneDeleted();
         applyTheme(state.theme || 'light');
         render();
+        renderTrash();
         queueSave();
       }catch(err){
-        alert('Could not read that file — is it an Inet Workshop export?');
+        alert('Kunde inte läsa in filen. Är det en giltig Inet Workshop-backup?');
       }
     };
     reader.readAsText(file);
