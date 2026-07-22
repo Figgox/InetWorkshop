@@ -524,42 +524,6 @@
     queueSave();
   });
 
-  // Export: download the whole board as a JSON file
-  document.getElementById('export-btn').addEventListener('click', ()=>{
-    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Inet Workshop-backup.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
-  // Import: load a previously exported JSON file back into the board
-  document.getElementById('import-btn').addEventListener('click', ()=>{
-    document.getElementById('import-file').click();
-  });
-  document.getElementById('import-file').addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try{
-        const parsed = JSON.parse(reader.result);
-        state = Object.assign({ short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light', deleted: [] }, parsed);
-        pruneDeleted();
-        applyTheme(state.theme || 'light');
-        render();
-        renderTrash();
-        queueSave();
-      }catch(err){
-        alert('Kunde inte läsa in filen. Är det en giltig Inet Workshop-backup?');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  });
-
   // Wait for auth.js to resolve the logged-in user before loading their
   // board — userSlug decides which Firebase path storageGet/storageSet use.
   window.Auth.ready().then(({ slug }) => {
