@@ -1,11 +1,11 @@
 # InetWorkshop
 
-URL: https://figgox.github.io/InetWorkshop/
+https://workshop.felixlindfors.se/
 
 ## Firebase login
 
 Boards are stored per person in Firebase Realtime Database, gated by a
-name + PIN (see `auth.js`). The PIN is only a simple client-side gate, not
+name + PIN. The PIN is only a simple client-side gate, not
 real authentication — anyone with the database URL could in theory read or
 write if they guess a PIN, so don't put anything sensitive in tickets.
 
@@ -27,8 +27,7 @@ Before login works:
    - `FIREBASE_STORAGE_BUCKET`
    - `FIREBASE_MESSAGING_SENDER_ID`
    - `FIREBASE_APP_ID`
-3. Set database rules that allow read/write under `/users` without Firebase
-   Auth (otherwise the default test-mode rules lock down after 30 days):
+3. Set database rules that allow read/write under `/users`
 
    ```json
    {
