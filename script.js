@@ -142,7 +142,6 @@
     return {
       id: prefix + String(id).padStart(3,'0'),
       link: '',
-      contact: '',
       notes: '',
       status: 'öppen',
       priority: false,
@@ -331,14 +330,14 @@
       linkLabel.textContent = 'Länk';
       const linkInput = document.createElement('input');
       linkInput.className = 'link-input';
-      linkInput.placeholder = 'C1 länk / Ärende #';
+      linkInput.placeholder = 'C1 länk / Ärende / Kund';
       linkInput.value = t.link;
       linkInput.addEventListener('input', ()=>{ t.link = linkInput.value; queueSave(); refreshOpenLink(); });
       // Enter jumps to the next field instead of doing nothing
       linkInput.addEventListener('keydown', (e)=>{
         if(e.key === 'Enter'){
           e.preventDefault();
-          contactInput.focus();
+          notes.focus();
         }
       });
       linkRow.appendChild(linkLabel);
@@ -363,26 +362,6 @@
       linkRow.appendChild(openLink);
       body.appendChild(linkRow);
 
-
-      // contact row
-      const contactRow = document.createElement('div');
-      contactRow.className = 'field-row';
-      const contactLabel = document.createElement('span');
-      contactLabel.className = 'field-label';
-      contactLabel.textContent = 'Vem?';
-      const contactInput = document.createElement('input');
-      contactInput.placeholder = 'Kund / Epost / Telefon';
-      contactInput.value = t.contact;
-      contactInput.addEventListener('input', ()=>{ t.contact = contactInput.value; queueSave(); });
-      contactInput.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter'){
-          e.preventDefault();
-          notes.focus();
-        }
-      });
-      contactRow.appendChild(contactLabel);
-      contactRow.appendChild(contactInput);
-      body.appendChild(contactRow);
 
       // notes
       const notes = document.createElement('textarea');
