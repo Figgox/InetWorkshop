@@ -142,7 +142,6 @@
     return {
       id: prefix + String(id).padStart(3,'0'),
       link: '',
-      contact: '',
       notes: '',
       status: 'öppen',
       priority: false,
@@ -341,14 +340,14 @@
       linkLabel.textContent = 'Länk';
       const linkInput = document.createElement('input');
       linkInput.className = 'link-input';
-      linkInput.placeholder = 'C1 länk / Ärende #';
+      linkInput.placeholder = 'C1 länk / Ärende / Kund';
       linkInput.value = t.link;
       linkInput.addEventListener('input', ()=>{ t.link = linkInput.value; queueSave(); refreshOpenLink(); });
       // Enter jumps to the next field instead of doing nothing
       linkInput.addEventListener('keydown', (e)=>{
         if(e.key === 'Enter'){
           e.preventDefault();
-          contactInput.focus();
+          notes.focus();
         }
       });
       linkRow.appendChild(linkLabel);
@@ -373,26 +372,6 @@
       linkRow.appendChild(openLink);
       body.appendChild(linkRow);
 
-
-      // contact row
-      const contactRow = document.createElement('div');
-      contactRow.className = 'field-row';
-      const contactLabel = document.createElement('span');
-      contactLabel.className = 'field-label';
-      contactLabel.textContent = 'Vem?';
-      const contactInput = document.createElement('input');
-      contactInput.placeholder = 'Kund / Epost / Telefon';
-      contactInput.value = t.contact;
-      contactInput.addEventListener('input', ()=>{ t.contact = contactInput.value; queueSave(); });
-      contactInput.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter'){
-          e.preventDefault();
-          notes.focus();
-        }
-      });
-      contactRow.appendChild(contactLabel);
-      contactRow.appendChild(contactInput);
-      body.appendChild(contactRow);
 
       // notes
       const notes = document.createElement('textarea');
@@ -575,42 +554,6 @@
     renderColumn('long');
     updateCount('long');
     queueSave();
-  });
-
-  // Export: download the whole board as a JSON file
-  document.getElementById('export-btn').addEventListener('click', ()=>{
-    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Inet Workshop-backup.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
-  // Import: load a previously exported JSON file back into the board
-  document.getElementById('import-btn').addEventListener('click', ()=>{
-    document.getElementById('import-file').click();
-  });
-  document.getElementById('import-file').addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try{
-        const parsed = JSON.parse(reader.result);
-        state = Object.assign({ short: [], long: [], nextShort: 1, nextLong: 1, theme: 'light', deleted: [] }, parsed);
-        pruneDeleted();
-        applyTheme(state.theme || 'light');
-        render();
-        renderTrash();
-        queueSave();
-      }catch(err){
-        alert('Kunde inte läsa in filen. Är det en giltig Inet Workshop-backup?');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
   });
 
   // Wait for auth.js to resolve the logged-in user before loading their

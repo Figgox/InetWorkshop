@@ -564,7 +564,7 @@
     margin:0 14px;
   }
 
-  /* Card body: link, contact and notes fields */
+  /* Card body: link and notes fields */
   .ticket-body{
     padding:12px 14px 14px 14px;
     display:flex;
@@ -572,7 +572,7 @@
     gap:8px;
   }
 
-  /* Labeled input rows (link, contact) */
+  /* Labeled input rows (link) */
   .field-row{
     display:flex;
     align-items:center;
