@@ -176,6 +176,18 @@
     return (num * 137.508) % 360;
   }
 
+  // Clears drag-over indicators from both columns — used on dragend and
+  // before redrawing highlights, since a cross-column drag can leave stale
+  // highlights in whichever column isn't the current drop target.
+  function clearDragHighlights(){
+    document.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el=>{
+      el.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+    document.querySelectorAll('.empty-state.drag-over').forEach(el=>{
+      el.classList.remove('drag-over');
+    });
+  }
+
   // Rebuilds one column's ticket cards from scratch based on the current
   // state. Called after any change (add/delete/edit/reorder) since the
 
@@ -206,9 +218,7 @@
       card.addEventListener('dragend', ()=>{
         card.classList.remove('dragging');
         card.draggable = false;
-        container.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el=>{
-          el.classList.remove('drag-over-top', 'drag-over-bottom');
-        });
+        clearDragHighlights();
         dragState = null;
       });
 
@@ -421,13 +431,13 @@
     }
 
     // While dragging: highlight where the ticket would land if dropped now.
+    // Only handles reordering within this same column — a drag from the
+    // other column is handled by the container-level listeners below.
     document.addEventListener('dragover', (e)=>{
       if(!dragState || dragState.kind !== kind) return;
       e.preventDefault();
       const cards = Array.from(container.querySelectorAll('.ticket'));
-      container.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el=>{
-        el.classList.remove('drag-over-top', 'drag-over-bottom');
-      });
+      clearDragHighlights();
       if(cards.length === 0) return;
       const to = dropIndexAt(e.clientY);
       // Highlight both the bottom of the card above and the top of the
@@ -444,9 +454,7 @@
     document.addEventListener('drop', (e)=>{
       if(!dragState || dragState.kind !== kind) return;
       e.preventDefault();
-      container.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el=>{
-        el.classList.remove('drag-over-top', 'drag-over-bottom');
-      });
+      clearDragHighlights();
       const from = dragState.index;
       const to = dropIndexAt(e.clientY);
       dragState = null;
@@ -455,6 +463,51 @@
       const [moved] = list.splice(from, 1);
       list.splice(to > from ? to - 1 : to, 0, moved);
       renderColumn(kind);
+      queueSave();
+    });
+
+    // Cross-column move: dragging a card from the OTHER column onto this
+    // one. Registered directly on the container (not document) so it only
+    // fires while actually hovering/dropping over this specific column.
+    // The moved ticket's id is regenerated with this column's prefix
+    // (Tx <-> Px) so the prefix always matches where the card actually is.
+    container.addEventListener('dragover', (e)=>{
+      if(!dragState || dragState.kind === kind) return;
+      e.preventDefault();
+      e.stopPropagation();
+      clearDragHighlights();
+      const cards = Array.from(container.querySelectorAll('.ticket'));
+      if(cards.length === 0){
+        const empty = container.querySelector('.empty-state');
+        if(empty) empty.classList.add('drag-over');
+        return;
+      }
+      const to = dropIndexAt(e.clientY);
+      if(to > 0){
+        cards[to - 1].classList.add('drag-over-bottom');
+      }
+      if(to < cards.length){
+        cards[to].classList.add('drag-over-top');
+      }
+    });
+
+    container.addEventListener('drop', (e)=>{
+      if(!dragState || dragState.kind === kind) return;
+      e.preventDefault();
+      e.stopPropagation();
+      clearDragHighlights();
+      const sourceKind = dragState.kind;
+      const from = dragState.index;
+      const to = dropIndexAt(e.clientY);
+      dragState = null;
+      const [moved] = state[sourceKind].splice(from, 1);
+      moved.id = (kind === 'short' ? 'T' : 'P') +
+        String(kind === 'short' ? state.nextShort++ : state.nextLong++).padStart(3, '0');
+      state[kind].splice(to, 0, moved);
+      renderColumn(sourceKind);
+      renderColumn(kind);
+      updateCount(sourceKind);
+      updateCount(kind);
       queueSave();
     });
   }

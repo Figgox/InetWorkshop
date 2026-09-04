@@ -652,4 +652,8 @@
     text-align:center;
     color:var(--ink-soft);
     font-size:12.5px;
+    transition:border-color .15s, background .15s, color .15s;
   }
+  /* Highlighted while a dragged ticket is hovering over an empty column */
+  .col-short .empty-state.drag-over{border-color:var(--urgent); background:var(--urgent-soft); color:var(--urgent);}
+  .col-long .empty-state.drag-over{border-color:var(--project); background:var(--project-soft); color:var(--project);}
