@@ -657,3 +657,10 @@
   /* Highlighted while a dragged ticket is hovering over an empty column */
   .col-short .empty-state.drag-over{border-color:var(--urgent); background:var(--urgent-soft); color:var(--urgent);}
   .col-long .empty-state.drag-over{border-color:var(--project); background:var(--project-soft); color:var(--project);}
+
+.site-footer{
+  text-align:center;
+  font-size:11px;
+  color:var(--ink-soft);
+  padding:24px 16px;
+}
