@@ -2,6 +2,8 @@
 
 https://workshop.felixlindfors.se/
 
+ver 1.6
+
 ## Firebase login
 
 Boards are stored per person in Firebase Realtime Database, gated by a
