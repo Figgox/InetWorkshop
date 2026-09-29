@@ -659,8 +659,10 @@
   .col-long .empty-state.drag-over{border-color:var(--project); background:var(--project-soft); color:var(--project);}
 
 .site-footer{
+  width:100%;
   text-align:center;
-  font-size:11px;
+  font-size:10px;
   color:var(--ink-soft);
+  opacity:.55;
   padding:24px 16px;
 }
