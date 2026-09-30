@@ -63,6 +63,25 @@
     --priority:#F0D264; --priority-soft:#2E2810;
   }
 
+  /* Rosa theme — light, pink palette (#FFDBDB #FDC3D1 #FDA8BF #FB8CAC #FF5C89) */
+  body[data-theme="rosa"]{
+    --bg:#FFDBDB;
+    --surface:#FFF4F5;
+    --ink:#4A1D2C;
+    --ink-soft:#9C5C72;
+    --border:#FDC3D1;
+    --urgent:#FF5C89;
+    --urgent-soft:#FFE3EA;
+    --project:#9A4D78;
+    --project-soft:#F6DDEA;
+    --done-bg:#FCE6E9;
+    --shadow:rgba(255,92,137,0.08);
+    --shadow-hover:rgba(255,92,137,0.16);
+    --waiting-fg:#B5602F; --waiting-bg:#FFEBD9; --waiting-border:#FDC9A0;
+    --donebadge-fg:#3E7A58; --donebadge-bg:#E4F2E9; --donebadge-border:#BFE0CC;
+    --priority:#E0457A; --priority-soft:#FDC3D1;
+  }
+
   /* ---- Base reset ---- */
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
