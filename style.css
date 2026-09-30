@@ -108,7 +108,7 @@
     --bg:#707173;
     --surface:#37383A;
     --ink:#FFFFFF;
-    --ink-soft:#9C9E9F;
+    --ink-soft:#E6E7E8;
     --border:#4C4D50;
     --urgent:#D10000;
     --urgent-soft:#4A2626;
@@ -121,6 +121,22 @@
     --donebadge-fg:#7FCB9A; --donebadge-bg:#1F3026; --donebadge-border:#2F4B3A;
     --priority:#FF4D4D; --priority-soft:#4A2626;
     --on-project:#000000;
+  }
+
+  /* Inet theme: ticket cards are light grey (#9C9E9F) on the #707173 page, so
+     everything inside a card gets its own dark-on-light colors */
+  body[data-theme="inet"] .ticket{
+    --surface:#9C9E9F;
+    --ink:#000000;
+    --project:#000000;
+    --ink-soft:#2F3031;
+    --border:#7D7F80;
+    --bg:#C2C4C5;
+    --done-bg:#8C8E8F;
+    --priority:#D10000; --priority-soft:#E3B9B9;
+    --waiting-fg:#5C3A00; --waiting-bg:#E6D3A0; --waiting-border:#B99A4A;
+    --donebadge-fg:#1F5A3A; --donebadge-bg:#BFE0CC; --donebadge-border:#6FA386;
+    --shadow:rgba(0,0,0,0.15);
   }
 
   /* Inet theme: white ticket ids, red used as fill on the Idag count badge */
