@@ -82,6 +82,25 @@
     --priority:#E0457A; --priority-soft:#FDC3D1;
   }
 
+  /* Lila theme — dark purple */
+  body[data-theme="lila"]{
+    --bg:#1A1426;
+    --surface:#231B33;
+    --ink:#ECE6F7;
+    --ink-soft:#9C90B8;
+    --border:#382C52;
+    --urgent:#F08BC0;
+    --urgent-soft:#3A1F33;
+    --project:#A98BF0;
+    --project-soft:#2B2250;
+    --done-bg:#1F1830;
+    --shadow:rgba(0,0,0,0.3);
+    --shadow-hover:rgba(0,0,0,0.45);
+    --waiting-fg:#E6C25C; --waiting-bg:#33292A; --waiting-border:#4D4030;
+    --donebadge-fg:#7FCB9A; --donebadge-bg:#18291F; --donebadge-border:#2A4536;
+    --priority:#E8C468; --priority-soft:#3A2F4A;
+  }
+
   /* ---- Base reset ---- */
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
