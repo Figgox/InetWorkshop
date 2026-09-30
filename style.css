@@ -105,7 +105,7 @@
 
   /* Inet theme — dark grey with Inet brand colors (#D10000 #000000 #FFFFFF #707173 #9C9E9F) */
   body[data-theme="inet"]{
-    --bg:#232425;
+    --bg:#707173;
     --surface:#37383A;
     --ink:#FFFFFF;
     --ink-soft:#9C9E9F;
