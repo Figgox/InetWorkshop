@@ -2,7 +2,7 @@
 
 https://workshop.felixlindfors.se/
 
-ver 1.6
+ver 1.7
 
 ## Firebase login
 
