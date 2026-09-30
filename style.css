@@ -101,6 +101,25 @@
     --priority:#E8C468; --priority-soft:#3A2F4A;
   }
 
+  /* Inet theme — Inet brand colors (#D10000 #000000 #FFFFFF #707173 #9C9E9F) */
+  body[data-theme="inet"]{
+    --bg:#F1F1F2;
+    --surface:#FFFFFF;
+    --ink:#000000;
+    --ink-soft:#707173;
+    --border:#D5D6D7;
+    --urgent:#D10000;
+    --urgent-soft:#FBE5E5;
+    --project:#000000;
+    --project-soft:#E4E5E6;
+    --done-bg:#EAEAEB;
+    --shadow:rgba(0,0,0,0.05);
+    --shadow-hover:rgba(0,0,0,0.1);
+    --waiting-fg:#8A5A00; --waiting-bg:#FBF3DF; --waiting-border:#F0DCA0;
+    --donebadge-fg:#3E7A58; --donebadge-bg:#E4F2E9; --donebadge-border:#BFE0CC;
+    --priority:#D10000; --priority-soft:#FBE5E5;
+  }
+
   /* ---- Base reset ---- */
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
