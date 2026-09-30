@@ -101,23 +101,23 @@
     --priority:#E8C468; --priority-soft:#3A2F4A;
   }
 
-  /* Inet theme — Inet brand colors (#D10000 #000000 #FFFFFF #707173 #9C9E9F) */
+  /* Inet theme — dark grey with Inet brand colors (#D10000 #000000 #FFFFFF #707173 #9C9E9F) */
   body[data-theme="inet"]{
-    --bg:#F1F1F2;
-    --surface:#FFFFFF;
-    --ink:#000000;
-    --ink-soft:#707173;
-    --border:#D5D6D7;
+    --bg:#2B2C2D;
+    --surface:#37383A;
+    --ink:#FFFFFF;
+    --ink-soft:#9C9E9F;
+    --border:#4C4D50;
     --urgent:#D10000;
-    --urgent-soft:#FBE5E5;
-    --project:#000000;
-    --project-soft:#E4E5E6;
-    --done-bg:#EAEAEB;
-    --shadow:rgba(0,0,0,0.05);
-    --shadow-hover:rgba(0,0,0,0.1);
-    --waiting-fg:#8A5A00; --waiting-bg:#FBF3DF; --waiting-border:#F0DCA0;
-    --donebadge-fg:#3E7A58; --donebadge-bg:#E4F2E9; --donebadge-border:#BFE0CC;
-    --priority:#D10000; --priority-soft:#FBE5E5;
+    --urgent-soft:#4A2626;
+    --project:#FFFFFF;
+    --project-soft:#45464A;
+    --done-bg:#2F3031;
+    --shadow:rgba(0,0,0,0.3);
+    --shadow-hover:rgba(0,0,0,0.45);
+    --waiting-fg:#E6C25C; --waiting-bg:#3A3423; --waiting-border:#5A4E2C;
+    --donebadge-fg:#7FCB9A; --donebadge-bg:#1F3026; --donebadge-border:#2F4B3A;
+    --priority:#FF4D4D; --priority-soft:#4A2626;
   }
 
   /* ---- Base reset ---- */
