@@ -23,6 +23,7 @@
     --waiting-fg:#A8791A; --waiting-bg:#FBF3DF; --waiting-border:#F0DCA0;
     --donebadge-fg:#3E7A58; --donebadge-bg:#E4F2E9; --donebadge-border:#BFE0CC;
     --priority:#B8860B; --priority-soft:#FBF0D9;
+    --on-project:#FFFFFF;
   }
 
   /* Night Shift theme — dark, warm accents */
@@ -99,6 +100,7 @@
     --waiting-fg:#E6C25C; --waiting-bg:#33292A; --waiting-border:#4D4030;
     --donebadge-fg:#7FCB9A; --donebadge-bg:#18291F; --donebadge-border:#2A4536;
     --priority:#E8C468; --priority-soft:#3A2F4A;
+    --on-project:#1A1426;
   }
 
   /* Inet theme — dark grey with Inet brand colors (#D10000 #000000 #FFFFFF #707173 #9C9E9F) */
@@ -118,6 +120,7 @@
     --waiting-fg:#E6C25C; --waiting-bg:#3A3423; --waiting-border:#5A4E2C;
     --donebadge-fg:#7FCB9A; --donebadge-bg:#1F3026; --donebadge-border:#2F4B3A;
     --priority:#FF4D4D; --priority-soft:#4A2626;
+    --on-project:#000000;
   }
 
   /* Inet theme: white ticket ids, red used as fill on the Idag count badge */
@@ -146,22 +149,20 @@
     justify-content:center;
     padding:24px;
   }
-  .theme-toggle{
+  .login-theme-select{
     position:absolute;
     top:20px;
     right:20px;
-    width:36px;
-    height:36px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
     background:var(--surface);
     border:1px solid var(--border);
-    border-radius:50%;
-    font-size:16px;
+    color:var(--ink-soft);
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    font-weight:500;
+    padding:8px 10px;
+    border-radius:6px;
     cursor:pointer;
   }
-  .theme-toggle:hover{border-color:var(--ink-soft);}
   .login-box{
     width:100%;
     max-width:340px;
@@ -210,7 +211,7 @@
   .login-box button[type="submit"]{
     background:var(--project);
     border:none;
-    color:#fff;
+    color:var(--on-project);
     font-family:'Inter',sans-serif;
     font-size:13px;
     font-weight:600;
@@ -727,3 +728,11 @@
   opacity:.55;
   padding:24px 16px;
 }
+
+.login-screen .login-footer{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+}
+.login-screen:not(.hidden) ~ .site-footer{display:none;}

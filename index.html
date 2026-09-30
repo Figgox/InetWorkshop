@@ -10,7 +10,14 @@
 
 <!-- Login gate: shown until a name + PIN is entered, see auth.js -->
 <div class="login-screen" id="login-screen">
-  <button type="button" id="login-theme-toggle" class="theme-toggle" title="Växla mellan ljust och mörkt tema" aria-label="Växla mellan ljust och mörkt tema">🌙</button>
+  <select id="login-theme-select" class="login-theme-select" title="Tema" aria-label="Tema">
+    <option value="light">Ljus</option>
+    <option value="night-shift">Mörk</option>
+    <option value="terminal">Terminal</option>
+    <option value="rosa">Rosa</option>
+    <option value="lila">Lila</option>
+    <option value="inet">Inet</option>
+  </select>
   <form class="login-box" id="login-form">
     <h1>Inet Workshop</h1>
     <p class="login-sub">Logga in med ditt namn och din PIN-kod.</p>
@@ -26,6 +33,7 @@
     <p class="login-error" id="login-error"></p>
     <p class="login-hint">Nytt namn loggar in direkt och sätter din PIN-kod automatiskt.</p>
   </form>
+  <footer class="site-footer login-footer">Ver 1.7 · Lagra ingen känslig data eller kunduppgifter</footer>
 </div>
 
 <div class="wrap hidden" id="app-wrap">

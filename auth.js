@@ -10,18 +10,17 @@
   const THEME_KEY = 'InetWorkshop-theme-pref';
 
   // Applies a theme before login (and before any per-user theme is known)
-  // and keeps the toggle button's icon in sync with it.
+  // and keeps the picker in sync with it.
   function applyPreTheme(theme){
     document.body.setAttribute('data-theme', theme);
-    document.getElementById('login-theme-toggle').textContent = theme === 'light' ? '🌙' : '☀️';
+    document.getElementById('login-theme-select').value = theme;
   }
 
   applyPreTheme(localStorage.getItem(THEME_KEY) || 'light');
 
-  document.getElementById('login-theme-toggle').addEventListener('click', () => {
-    const next = document.body.getAttribute('data-theme') === 'light' ? 'night-shift' : 'light';
-    localStorage.setItem(THEME_KEY, next);
-    applyPreTheme(next);
+  document.getElementById('login-theme-select').addEventListener('change', (e) => {
+    localStorage.setItem(THEME_KEY, e.target.value);
+    applyPreTheme(e.target.value);
   });
 
   function slugify(name){
