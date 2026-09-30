@@ -103,18 +103,19 @@
     --on-project:#1A1426;
   }
 
-  /* Inet theme — dark grey with Inet brand colors (#D10000 #000000 #FFFFFF #707173 #9C9E9F) */
+  /* Inet theme — dark greys sampled from Inet's own dark UI, with Inet red
+     (#D10000) and white. Page #242526, cards #303233, fields #484A4B. */
   body[data-theme="inet"]{
-    --bg:#707173;
-    --surface:#37383A;
+    --bg:#242526;
+    --surface:#303233;
     --ink:#FFFFFF;
-    --ink-soft:#E6E7E8;
-    --border:#4C4D50;
+    --ink-soft:#9C9E9F;
+    --border:#414141;
     --urgent:#D10000;
     --urgent-soft:#4A2626;
     --project:#FFFFFF;
-    --project-soft:#45464A;
-    --done-bg:#2F3031;
+    --project-soft:#484A4B;
+    --done-bg:#2A2C2D;
     --shadow:rgba(0,0,0,0.3);
     --shadow-hover:rgba(0,0,0,0.45);
     --waiting-fg:#E6C25C; --waiting-bg:#3A3423; --waiting-border:#5A4E2C;
@@ -123,23 +124,11 @@
     --on-project:#000000;
   }
 
-  /* Inet theme: ticket cards are light grey (#9C9E9F) on the #707173 page, so
-     everything inside a card gets its own dark-on-light colors */
-  body[data-theme="inet"] .ticket{
-    --surface:#9C9E9F;
-    --ink:#000000;
-    --project:#000000;
-    --ink-soft:#2F3031;
-    --border:#7D7F80;
-    --bg:#C2C4C5;
-    --done-bg:#8C8E8F;
-    --priority:#D10000; --priority-soft:#E3B9B9;
-    --waiting-fg:#5C3A00; --waiting-bg:#E6D3A0; --waiting-border:#B99A4A;
-    --donebadge-fg:#1F5A3A; --donebadge-bg:#BFE0CC; --donebadge-border:#6FA386;
-    --shadow:rgba(0,0,0,0.15);
-  }
-
-  /* Inet theme: white ticket ids, red used as fill on the Idag count badge */
+  /* Inet theme: input fields inside cards and the login box use the lighter
+     #484A4B, like the message blocks in Inet's UI; ticket ids stay white and
+     red is used as fill on the Idag count badge */
+  body[data-theme="inet"] .ticket,
+  body[data-theme="inet"] .login-box{--bg:#484A4B;}
   body[data-theme="inet"] .col-short .ticket-id{color:var(--ink);}
   body[data-theme="inet"] .col-short .count-badge{background:var(--urgent); border-color:var(--urgent); color:#FFFFFF;}
 
