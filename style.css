@@ -120,6 +120,10 @@
     --priority:#FF4D4D; --priority-soft:#4A2626;
   }
 
+  /* Inet theme: white ticket ids, red used as fill on the Idag count badge */
+  body[data-theme="inet"] .col-short .ticket-id{color:var(--ink);}
+  body[data-theme="inet"] .col-short .count-badge{background:var(--urgent); border-color:var(--urgent); color:#FFFFFF;}
+
   /* ---- Base reset ---- */
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
